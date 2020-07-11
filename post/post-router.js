@@ -59,7 +59,8 @@ router.get('/:id', (req, res) => {
 
 // Post /posts
 router.post('/', (req, res) => {
-  Posts.insert(req.body)
+  Posts
+    .insert(req.body)
     .then(post => {
       res.status(201).json(post);
     })
@@ -83,6 +84,29 @@ router.post('/:id/comments', async (req, res) => {
       error: 'There was an error while saving the comment to the database'
     })
   }
+})
+
+// Delete /posts/:id
+router.delete('/:id', (req, res) => {
+  Posts
+    .remove(req.params.id)
+    .then(count => {
+      if (count > 0) {
+        res.status(200).json({
+          message: "Your post has been removed"
+        })
+      } else {
+        res.status(404).json({
+          message: "The post with the specified ID does not exist."
+        })
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({
+        error: "The post could not be removed"
+      })
+    })
 })
 
 module.exports = router;
